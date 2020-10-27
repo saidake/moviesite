@@ -1,0 +1,341 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+	<head>
+
+		<link href="img/favicon.ico" rel="shortcut icon" type="image/x-icon"/>  
+		<link href="lib/bootstrap-3.3.7-dist/bootstrap.min.css" rel="stylesheet" />
+		<script src="lib/jQuery/jquery-1.12.4.min.js"></script>
+		<script src="lib/bootstrap-3.3.7-dist/bootstrap.min.js"></script>
+		<script src="lib/art-template/template-web.js"></script>
+		<link href="css/index_teacher.css" rel="stylesheet" />
+		<meta charset="utf-8" />
+		<title>考评分析网</title>
+	</head>
+	<body>
+		<div class="top">
+			<div class="top_pict" style="margin: 0;background-color: #EEEEEE;">
+				<div class="jumbotron">
+					<div class="row">
+						<div class="col-md-1">
+							<img class="logo img-rounded" src="img/logo.png" />
+						</div>
+						<div class="col-md-8">
+							<img class="" src="img/text.png" />						  
+						</div>
+						<div class=" col-md-3">
+							<a href="index.html" class="logout">
+							退出登录
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="nav_" style="margin: 0;">
+				<ul id="up_box" class="tag nav nav-pills">
+				  <li role="tag_ presentation" class="active">出卷</li>
+				  <li role="tag_ presentation" class="active">判卷</li>
+				  <li role="tag_ presentation" class="active">分析</li>
+				</ul>				
+			</div>
+		</div>
+
+
+
+
+<div id="down_box" class="main" >
+<!-- 出卷页 --------------------------------------------------------------->
+		<div id="chu"></div>
+
+
+
+		<div class="panjuan" style="color:#fff;">
+			一键判卷
+		</div>
+		
+
+
+<!-- 分析页 --------------------------------------------------------------->
+		<div class="fenxi" id="fenxi_art-container"></div>
+
+</div>
+
+
+
+		<div class="bottom">
+			<div class="row">
+				<div class="col-md-10">
+					<p class="adress">© 2020 kaopingfenxi.com  京ICP备 1205492号-11 京公网安备110108656541号 营业执照</p>	
+				</div>
+				<div class="col-md-2">
+					<div class="pic_bottom">
+						<img src="img/sina.png" style="width: 40px;" />
+						<img src="img/wechat.png" style="width: 40px;" />
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+
+<script id="chu_sid" type="text/x-art-template"> 
+
+			<div id="select1">
+				<span>科目：</span>
+				<select id="exam_name">
+				{{each exampaper  v i}}     
+					<option value ="1">{{ v.exam_name }}</option>
+				{{/each}}   
+				  
+				</select>
+			</div>
+
+			<div id="select2">
+				<span>考题：</span>
+				<select>
+				  <option value ="test1">测试题《第一套》</option>
+				  <option value ="test2">测试题《第二套》</option>
+				</select>
+			</div>
+
+			<div id="chujuan">
+				<span style="color:#fff;">一键出卷</span>
+			</div>
+
+			<textarea name="" id="exampaper_v" class="area">test</textarea>
+</script>
+
+
+
+<script id="fenxi_sid" type="text/x-art-template">	
+<table id="sss" style="width:200px; height:200px; margin:100px auto;font-size:16px;">
+				<tr>
+					<td>总人数：</td>
+					<td>{{ stu_num }}</td>
+				</tr>
+				<tr>
+					<td>最高分：</td>
+					<td>{{ max }}</td>
+				</tr>
+				<tr>
+					<td>最低分：</td>
+					<td>{{ min }}</td>
+				</tr>
+				<tr>
+					<td>平均分：</td>
+					<td>{{ average }}</td>
+				</tr>
+				<tr>
+					<td>及格人数：</td>
+					<td>{{ pass_num }}</td>
+				</tr><tr>
+					<td>旷考人数：</td>
+					<td>{{ absent_num }}</td>
+				</tr><tr>
+					<td>不及格人数：</td>
+					<td>{{ notpass_num }}</td>
+				</tr>
+</table>
+</script>
+
+
+
+		<script>
+			$(function($){
+//调整主页面样式
+				$("#down_box").children("div").hide();            
+				$("#down_box").children("div:first").show();      
+//渲染分析页数据
+				$.get('koko?m=getuser',function(res){
+					var user_data=JSON.parse(res);      
+
+					var stu_num=user_data.length;//总人数
+					$.get('koko?m=getscore',function(sres){
+						var score_data=JSON.parse(sres);  
+						var max=0;		   //最高分
+						var min=9999;      //最低分
+						var average=0;     //平均分
+						var pass_num=0;    //及格人数
+						var absent_num=0;  //旷考人数
+						var notpass_num=0;  //不及格人数
+
+						score_data.forEach(function (ele){
+							nscore=parseInt(ele.score);
+
+							if(nscore>max)max=nscore;
+							if(nscore<min)min=nscore;
+							average+=nscore;
+
+							if(nscore>=60){pass_num+=1;}
+							if(ele.status=="absent"){absent_num+=1;}
+						});
+						average/=stu_num;
+						notpass_num=stu_num-pass_num;
+						var data = {stu_num:stu_num,
+							max:max,
+							min:min,
+							average:average,
+							pass_num:pass_num,
+							absent_num:absent_num,
+							notpass_num:notpass_num};  
+            		    var html = template('fenxi_sid', data);     
+           			     $("#fenxi_art-container").html(html);
+					})  
+				})  
+//渲染出卷页数据
+					$.get('koko?m=getexampaper',function(res){
+						var examdata=JSON.parse(res);
+						var data = {exampaper:examdata};  
+                   		var html = template('chu_sid', data );     
+             	        $("#chu").html(html);     
+					})  
+//注册出卷事件  
+
+setTimeout(function(){
+						$("#chujuan").on("click",function(){
+
+						$.get('koko?m=getchoice_question',function(res){
+							var cho_question=JSON.parse(res);
+							$.get('koko?m=getcompletion',function(res){
+								var com_question=JSON.parse(res);
+								$.get('koko?m=getcalculation',function(res){
+									var cal_question=JSON.parse(res);
+
+
+
+
+
+									var cho_str=["一、选择题  （每小题10分，共50分）\n"];
+									var com_str=["\n\n二、填空题  （每小题10分，共30分）\n"];
+									var cal_str=["\n\n三、计算题  （每小题20分，共20分）\n"];
+
+									//获取选中的option索引，匹配试卷 刷新出题目
+									var exam_val;
+									$("#select2").children("select").children("option").each(function(){
+										if($(this).is(":selected")){
+											exam_val=$(this).text();      //试卷套数名称
+											var u_exam_name;             //科目名
+											$("#exam_name").children("option").each(function(){
+												if($(this).is(":selected")) u_exam_name=$(this).text();
+											}); 
+											// console.log("u_exam_name---"+u_exam_name);
+											// console.log('exam_val----'+exam_val);
+
+											cho_str.unshift("\t\t\t\t\t"+exam_val+"\n");  //试卷标题
+
+
+
+
+											var a=0,b=0,c=0; //题目序号
+											cho_question.forEach(function(ele){
+												if(ele.exam_name==u_exam_name){  //判断科目
+
+
+													var cat_obj=JSON.parse(ele.cat)
+													
+													Reflect.ownKeys(cat_obj).forEach(function(key){	    //判断套数名
+														if(cat_obj[key]==exam_val){
+															cho_str.push(++a+'. '+ele.question+"（）\n"
+															+'   A. '+ele.answer_a+'\t'
+															+'B. '+ele.answer_b+'\t'
+															+'C. '+ele.answer_c+'\t'
+															+'D. '+ele.answer_d+'\n\n'
+															);// 添加题目
+														}
+													})
+
+
+
+									
+												}
+
+											});
+											com_question.forEach(function(ele){
+												if(ele.exam_name==u_exam_name){
+													var cat_obj=JSON.parse(ele.cat)
+													Reflect.ownKeys(cat_obj).forEach(function(key){	    //判断套数名
+														if(cat_obj[key]==exam_val){
+															var acc=ele.question.replace(/？/g,"_________");
+															com_str.push(++b+'. '+acc+"。\n\n");
+															console.log(acc);
+														}
+													})
+												}
+											});
+
+
+											// console.log("cal begin");
+											cal_question.forEach(function(ele){
+												if(ele.exam_name==u_exam_name){
+													var cat_obj=JSON.parse(ele.cat)
+													Reflect.ownKeys(cat_obj).forEach(function(key){	    //判断套数名
+
+														// console.log('key----'+key);
+														// console.log('cat_obj[key]'+cat_obj[key]);
+
+														if(cat_obj[key]==exam_val){
+															cal_str.push(++c+'. '+ele.question+"\n\n");
+
+															// console.log('ele----'+ele);
+															// console.log("cal:cat_obj[key]"+cat_obj[key]);
+															// console.log("cal:ele.question"+ele.question);
+														}
+													})
+												}
+											});
+
+
+
+											var t_text=cho_str.concat(com_str,cal_str).join("");
+
+
+											$("#exampaper_v").text(t_text);
+
+										}
+									})
+
+
+
+
+
+
+								});
+
+							});
+						});
+						
+						
+
+
+
+					})
+},1000);
+
+
+
+
+//连接上下盒子
+				$("#up_box").delegate("li","click",function(){
+					var ind=$(this).index();
+					$("#down_box").children("div").each(function(){
+						$(this).hide();
+						if($(this).index()===ind) $(this).show();
+						
+					})
+				})               
+////数据接口测试
+					// $.get('koko?m=getuser',function(res){console.log('getuser'+res);})  
+					// $.get('koko?m=getscore',function(res){console.log('getscore'+res);})  
+   					// $.get('koko?m=getexampaper',function(res){console.log('getexampaper'+res);})    
+
+					// $.get('koko?m=getchoice_question',function(res){console.log('getchoice_question'+res);})    
+					// $.get('koko?m=getcalculation',function(res){console.log('getcalculation'+res);})    
+					// $.get('koko?m=getcompletion',function(res){console.log('getcompletion'+res);})   
+
+			})
+
+
+
+		</script>
+	</body>
+</html>

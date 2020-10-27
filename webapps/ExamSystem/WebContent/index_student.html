@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link href="img/favicon.ico" rel="shortcut icon" type="image/x-icon"/>  
+		<link href="css/index_student.css" rel="stylesheet" />
+		<link href="lib/bootstrap-3.3.7-dist/bootstrap.min.css" rel="stylesheet" />
+		<script src="lib/jQuery/jquery-1.12.4.min.js"></script>
+		<script src="lib/art-template/template-web.js"></script>
+		<script src="lib/bootstrap-3.3.7-dist/bootstrap.min.js"></script>
+		<meta charset="utf-8" />
+		<title>考评分析网</title>
+	</head>
+	<body>
+		<div class="top">
+			<div class="top_pict">
+				<div class="jumbotron" style="margin: 0;">
+					<div class="row">
+						<div class="col-md-1">
+							<img class="logo img-rounded" src="img/logo.png" />
+						</div>
+						<div class="col-md-8">
+							<img class="" src="img/text.png" />						  
+						</div>
+						<div class=" col-md-3">
+							<span id="user_name">###</span>
+							<a href="index.html" class="logout" style="">
+							退出登录
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="nav_">
+			</div>
+		</div>
+
+<!-- 考试容器----------------------------------------------------- -->
+		<div class="main">
+			<table class="container-fluid" id="art-container" style="margin-bottom: 500px;"></table>
+			<div class="redbtn" id="exam_online">在线考试</div>
+		</div>
+
+
+
+
+		<div class="bottom">
+			<div class="row">
+				<div class="col-md-10">
+					<p class="adress">© 2020 kaopingfenxi.com  京ICP备 1205492号-11 京公网安备110108656541号 营业执照</p>	
+				</div>
+				<div class="col-md-2">
+					<div class="pic_bottom">
+						<img src="img/sina.png" style="width: 40px;" />
+						<img src="img/wechat.png" style="width: 40px;" />
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script id="sid" type="text/x-art-template">  
+						<tr>
+							<td class="col-md-1">科目</td>
+							<td class="col-md-1">成绩</td>
+						</tr>
+				{{each list v i}}     
+				{{if is_name==v.user_name }}     
+						<tr>
+							<td class="col-md-1">{{v.exam_name}}</td>
+							<td class="col-md-1">{{v.score}}</td>
+						</tr>
+			 	{{/if}}
+						
+				{{/each}}           
+		</script>  
+		<script>
+			$(function($){
+
+
+
+
+				$.get('/koko?m=getscore',function(res) {
+					console.log(res)
+					var data = {title:"stu",is_name:$('#user_name').text(),list:JSON.parse(res)};  
+					var html = template('sid',data);  
+					$("#art-container").html(html);
+				})
+//在线考试事件
+				var t_text;
+				$("#exam_online").on("click",function(){//在线考试事件开始-------------------------------------------------------
+
+
+
+						$.get('koko?m=getchoice_question',function(res){
+							var cho_question=JSON.parse(res);
+							$.get('koko?m=getcompletion',function(res){
+								var com_question=JSON.parse(res);
+								$.get('koko?m=getcalculation',function(res){
+									var cal_question=JSON.parse(res);
+
+
+
+
+
+									var cho_str=["一、选择题  （每小题10分，共50分）\n"];
+									var com_str=["\n\n二、填空题  （每小题10分，共30分）\n"];
+									var cal_str=["\n\n三、计算题  （每小题20分，共20分）\n"];
+
+											var exam_val="测试题《第一套》";   //试卷套数名称
+											var u_exam_name="C语言程序设计";             //科目名
+											// console.log("u_exam_name---"+u_exam_name);
+											// console.log('exam_val----'+exam_val);
+
+											cho_str.unshift("\t\t\t\t\t"+exam_val+"\n");  //试卷标题
+
+
+
+
+											var a=0,b=0,c=0; //题目序号
+											cho_question.forEach(function(ele){
+												if(ele.exam_name==u_exam_name){  //判断科目
+
+
+													var cat_obj=JSON.parse(ele.cat)
+													
+													Reflect.ownKeys(cat_obj).forEach(function(key){	    //判断套数名
+														if(cat_obj[key]==exam_val){
+															cho_str.push(++a+'. '+ele.question+"（）\n"
+															+'   A. '+ele.answer_a+'\t'
+															+'B. '+ele.answer_b+'\t'
+															+'C. '+ele.answer_c+'\t'
+															+'D. '+ele.answer_d+'\n\n'
+															);// 添加题目
+														}
+													})
+
+
+
+									
+												}
+
+											});
+											com_question.forEach(function(ele){
+												if(ele.exam_name==u_exam_name){
+													var cat_obj=JSON.parse(ele.cat)
+													Reflect.ownKeys(cat_obj).forEach(function(key){	    //判断套数名
+														if(cat_obj[key]==exam_val){
+															var acc=ele.question.replace(/？/g,"_________");
+															com_str.push(++b+'. '+acc+"。\n\n");
+															console.log(acc);
+														}
+													})
+												}
+											});
+
+
+											// console.log("cal begin");
+											cal_question.forEach(function(ele){
+												if(ele.exam_name==u_exam_name){
+													var cat_obj=JSON.parse(ele.cat)
+													Reflect.ownKeys(cat_obj).forEach(function(key){	    //判断套数名
+
+														// console.log('key----'+key);
+														// console.log('cat_obj[key]'+cat_obj[key]);
+
+														if(cat_obj[key]==exam_val){
+															cal_str.push(++c+'. '+ele.question+"\n\n");
+
+															// console.log('ele----'+ele);
+															// console.log("cal:cat_obj[key]"+cat_obj[key]);
+															// console.log("cal:ele.question"+ele.question);
+														}
+													})
+												}
+											});
+
+
+
+											t_text=cho_str.concat(com_str,cal_str).join("");
+											t_text="<div><div id=\"test_time\" class=\"test_time\"></div>"+t_text+"</div>";
+											//空格替换
+											t_text=t_text.replace(/\n/g,"<br//>");
+											//选择题替换  ---在前面的操作中自动加了（）
+											t_text=t_text.replace(/\（\）/g,"<input class=\"cho\" type=\"text\" style=\"width:90px;\" />");
+											//填空题替换
+											t_text=t_text.replace(/_________/g,"<input class=\"com\" type=\"text\" style=\"width:90px;\" />");
+											//计算题替换
+											t_text=t_text.replace(/\？/g,"<br/><textarea class=\"cal\" style=\"width:100%;height:200px;\" />");
+											t_text=t_text+"<div class=\"redbtn-style\" id=\"exam_submit\" style=\"margin-bottom: 200px;\">提交</div>";
+											$(".main").html(t_text);
+											//时间限制 
+											a=120;
+											b=60;
+											cc="120:00"
+											ttt=$("#test_time")
+											ttt.css("background-color","#f0f");
+											ttt.css("font-size","30px");
+											ttt.css("font-color","#000");
+											ttt.css("width","100px");
+											ttt.css("margin","0 auto");
+											setInterval(function () {
+												--b;
+												if(b==0){b=60,a-=1}
+												if(b/10<1){cc=a+":0"+b}else{
+													cc=a+":"+b;
+												}
+												ttt.text(cc)
+												if(a==0){
+													cc="考试结束！";
+													$(".main").html("<table class=\"container-fluid\" id=\"art-container\" style=\"margin-bottom: 500px;\"></table><div class=\"redbtn\" id=\"exam_online\">在线考试</div>")
+												}
+											}, 1000)  
+											// 1. 获取各种题目数据，成绩数据
+											// 2. 为提交绑定事件
+											// 3. 按试卷套数依次和答案比对文字域中内容  写入成绩
+					// $.get('koko?m=getchoice_question',function(res){console.log('getchoice_question'+res);})    
+					// $.get('koko?m=getcalculation',function(res){console.log('getcalculation'+res);})    
+					// $.get('koko?m=getcompletion',function(res){console.log('getcompletion'+res);})    
+					// $.get('koko?m=getscore',function(res){console.log('getscore'+res);})  
+					$("#exam_submit").on("click",function(){//提交事件开始--------
+						var classname="C语言程序设计";
+						var exam="测试题《第一套》";   
+						var subscore=0;
+										//选择题比对
+						var cho_ind=0;
+					$.get('koko?m=getchoice_question',function(res){//选择
+						var cho=JSON.parse(res);
+						console.log(cho);
+						cho.forEach(function(e,i){
+							if(e.exam_name==classname){
+								var temp=JSON.parse(e.cat)
+								for(var key in temp){
+									if(temp[key]==exam){//比对？？？？？
+										if(e.answer==$($(".main").find(".cho").get(cho_ind)).val()){
+											subscore+=10;
+											console.log('cho');
+										}
+										cho_ind++;
+										
+									}
+								}
+							}
+						})
+
+
+												//填空题比对
+						var com_ind=0;
+					$.get('koko?m=getcompletion',function(res){
+						var com=JSON.parse(res);
+						console.log(com);
+						com.forEach(function(e,i){
+							if(e.exam_name==classname){
+								var temp=JSON.parse(e.cat)
+								for(var key in temp){
+									if(temp[key]==exam){
+										var tempp=JSON.parse(e.answer);//一个题的答案数组
+										for(var key in tempp){
+											console.log(tempp[key]);
+											if(tempp[key]==$($(".main").find(".com").get(com_ind)).val()){
+												subscore+=10/Object.keys(tempp).length;
+												// console.log('Object.keys(tempp).length'+Object.keys(tempp).length);
+												console.log('com');
+											
+											}
+											com_ind++;
+
+
+										}
+									}
+								}
+							}
+						})
+						//计算题比对
+						var cal_ind=0;
+					$.get('koko?m=getcalculation',function(res){
+						var cal=JSON.parse(res);
+						console.log(cal);
+						cal.forEach(function(e,i){
+							if(e.exam_name==classname){
+								var temp=JSON.parse(e.cat)
+								for(var key in temp){
+									if(temp[key]==exam){
+										console.log(e.answer);
+										if(e.answer==$($(".main").find(".cal").get(cal_ind)).val()){
+											subscore+=20;
+											// console.log('subscore'+subscore);
+											console.log('cal');
+
+										}
+										cal_ind++;
+
+									}
+								}
+							}
+						})
+						var reqt="koko?m=addscore&user_name="+$("#user_name").text()+"&exam_name="+classname+"&score="+subscore+"&exam_situation=normal";
+						console.log(reqt);
+						$.get(reqt,function(res){
+							console.log(res);
+							$("#exam_submit").text(res);//替换提交成功
+							ta=res.replace("\n","");
+							console.log("testss"+res+"aaa");
+							//提交成功跳转到在线考试
+							if(ta=="提交成功"){
+								console.log("testssssssssss"+res);
+								setTimeout(function(){
+									$(".main").html("<table class=\"container-fluid\" id=\"art-container\" style=\"margin-bottom: 500px;\"></table><div class=\"redbtn\" id=\"exam_online\">在线考试</div>");
+								},3000);         
+							
+						}
+
+						});
+					})   
+
+
+
+
+
+					})//填空   
+
+
+
+
+
+
+					})//选择    
+						
+
+
+
+
+					});//提交事件结束---------------------------------------------
+
+								});
+
+							});
+						});
+				});	//在线考试事件结束---------------------------------------------------------------------------------------
+
+
+			});
+		</script>
+	</body>
+</html>

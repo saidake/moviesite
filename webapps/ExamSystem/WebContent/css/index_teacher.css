@@ -1,0 +1,137 @@
+body {
+	cursor: pointer;
+}
+.login{
+	position: relative;
+	padding: 0px;
+	margin:0px ;
+	left: 120px;
+	top:50px ;
+}
+.bottom{
+	position: relative;
+	background-color: #035698;
+	font-size: 20px;
+	height: 100px;
+}
+.adress{
+	position: relative;
+	color: white;
+	text-align: center;
+}
+.main{
+	position: relative;
+	height: 500px;
+}
+.top{
+	position: relative;
+	height: 286px;
+}
+.logo{
+	position: relative;
+	top:0px;
+	width: 150px;
+	left: 0px;
+}
+.nav_{
+	position: relative;
+	background-color: dimgrey;
+	width: auto;
+}
+.tag{
+	position: relative;
+	left: 500px;
+	width: 300px;
+}
+
+.pic_bottom{
+	position: relative;
+	left: 50px;
+	width: 45px;
+}
+
+
+
+
+
+/*下方大盒子------------------------------------------------------*/
+#downbox {
+	position: relative;
+}
+
+#select1{
+	width: 80px;
+	position: absolute;
+	top: 100px;
+	left: 600px;
+
+
+}
+#select2{
+	position: absolute;
+	width: 80px;
+	top: 150px;
+	left: 600px;
+
+}
+
+#chujuan{
+	width: 100px;
+	height: 30px;
+	position: absolute;
+	top: 250px;
+	left: 630px;
+	
+	background-color: red;
+	text-align: center;
+	color: black;
+	font-size: 20px;
+	border-radius: 10px;
+}
+.area {
+	width: 200px;
+	height: 200px;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+.panjuan {
+	width: 180px;
+	position: absolute;
+	left: 550px ;
+	top: 200px;
+	background-color: #FF0000;
+	font-size: 20px; 
+	border-radius: 10px;
+	text-align: center;
+}
+
+
+#exampaper_v {
+	width: 500px;
+	height: 500px;
+}
+
+a.logout {
+	color: #000;
+	width: 200px;
+	height: 20px;
+	border-radius: 5px;
+	background-color: #59E0B3;
+}
+#up_box {
+	width: 100%;
+	height: 40px;
+}
+#up_box li {
+	width: 100px;
+	height: 40px;
+	background-color: #626FCA;
+	text-align: center;
+	line-height: 40px;
+	color: #fff;
+	border-radius: 5px;
+}
+
+
