@@ -1,0 +1,23 @@
+--------------------------------------------
+网页目录：webapps
+--------------------------------------------
+ExamSystem（学生在线考试系统） 
+页面:            bootstrap.css，JQuery. js
+服务器:          apache-tomcat
+数据库:          mysql
+系统：           windows10
+HomeOfMovie（电影之家） 
+页面：            JQuery. js，art-template. js
+服务器：          apache-tomat
+数据库：          mysql
+系统：            windows10
+--------------------------------------------
+运行环境：jdk8
+安装：切换到bin目录，cmd执行"service.bat install" 
+	  点击bin/Tomcat8w.exe   修改Java Virtual Machine 目录
+	  添加环境变量           C:\tomcat\lib  C:\tomcat\bin
+配置： conf/server.xml    Engine> Host>  
+		<Host name="localhost"访问域名  appBase="webapps"  unpackWARs="true" autoDeploy="true">
+		<Context  path=""浏览器根目录前的访问目录  docBase="../THEME"网站访问目录  reloadable="true"项目文件有改动时重新加载 />（手动添加）
+		<Connector port="8080"访问端口  protocol="HTTP/1.1" connectionTimeout="20000"  redirectPort="8443" />    
+--------------------------------------------
