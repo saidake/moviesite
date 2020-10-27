@@ -2,15 +2,11 @@
 网页目录：webapps
 --------------------------------------------
 ExamSystem（学生在线考试系统） 
-页面:            bootstrap.css，JQuery. js
-服务器:          apache-tomcat
-数据库:          mysql
-系统：           windows10
+内容:         bootstrap.css，JQuery.js
 HomeOfMovie（电影之家） 
-页面：            JQuery. js，art-template. js
-服务器：          apache-tomat
-数据库：          mysql
-系统：            windows10
+内容：        JQuery.js，art-template.js
+
+后端：java servlet
 --------------------------------------------
 运行环境：jdk8
 安装：切换到bin目录，cmd执行"service.bat install" 
