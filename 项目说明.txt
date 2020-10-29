@@ -1,15 +1,15 @@
+-------------------------------------服务器网站-------
 --------------------------------------------
-
-ExamSystem（学生在线考试系统，页面目录：webapps/ExamSystem/WebContent） 
+ExamSystem（学生在线考试系统，查看页面所在目录：webapps/ExamSystem/WebContent） 
 架构:         bootstrap.css，JQuery.js
-HomeOfMovie（电影之家，页面目录：webapps/HomeOfMovie/WebContent） 
+HomeOfMovie（电影之家，查看页面所在目录：webapps/HomeOfMovie/WebContent） 
 
 架构：        JQuery.js，art-template.js
 
 
 
 后端：java servlet
---------------------------------------------
+------------------------------------服务器安装----------------------------------------------------
 运行环境：jdk8
 x64
 安装：切换到bin目录，cmd管理员执行"service.bat install" 
